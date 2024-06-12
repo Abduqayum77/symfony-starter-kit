@@ -1,7 +1,7 @@
 api_platform:
-    title: 'Arbitration development project'
+    title: 'project name'
     description: 'CREATED BY TULQIN MUXTOROV'
-    version: '0.0.2'
+    version: '0.0.1'
 
     #swager ui enable
     #    enable_entrypoint: false
