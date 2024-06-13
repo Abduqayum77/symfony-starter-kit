@@ -3,7 +3,7 @@ security:
     password_hashers:
         App\Entity\User: auto
 
-    #enable_authenticator_manager: true
+    # enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:

@@ -1,6 +1,6 @@
 api_platform:
     title: 'project name'
-    description: 'CREATED BY TULQIN MUXTOROV'
+    description: 'project'
     version: '0.0.1'
 
     #swager ui enable
