@@ -1,58 +1,18 @@
 api_platform:
     title: Hello API Platform
     version: 1.0.0
-    description: API Platform
-
-    #swager ui enable
-    #    enable_entrypoint: false
-    #    enable_swagger_ui: false
-    #    enable_swagger: false
-
-    mapping:
-        paths: ['%kernel.project_dir%/src/Entity']
-
-    patch_formats:
-        json: ['application/merge-patch+json']
-
-
     formats:
         jsonld: ['application/ld+json']
-        json: ['application/json']
-        html: ['text/html']
-
     docs_formats:
         jsonld: ['application/ld+json']
         jsonopenapi: ['application/vnd.openapi+json']
         html: ['text/html']
-
     defaults:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
-
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
-
-        pagination_client_enabled: true
-        pagination_items_per_page: 10
-        pagination_client_items_per_page: true
-
-
     keep_legacy_inflector: false
     use_symfony_listeners: true
-
-    collection:
-        pagination:
-            enabled_parameter_name: pagination # optional
-            items_per_page_parameter_name: PerPage
-
-    swagger:
-        versions: [3]
-        api_keys:
-            apiKey:
-                name: Authorization
-                type: header
-
-        swagger_ui_extra_configuration:
-            persistAuthorization: true
