@@ -5,16 +5,12 @@ namespace App\Component\Profile\Services;
 
 use App\Component\Media\MediaFactory;
 use App\Component\Media\MediaManager;
-use App\Component\Parents\ParentManager;
-use App\Component\Profile\Builders\SignUpParentBuilder;
 use App\Component\Profile\DirectorBase;
 use App\Component\Profile\Dto\SignUpRequestDto;
-use App\Component\Profile\Dtos\SingUpRequestDto;
 use App\Component\Profile\ProfileFactory;
 use App\Component\Profile\ProfileManager;
 use App\Component\User\password\HashPasswordManager;
 use App\Component\User\UserManager;
-use App\Entity\Center;
 use App\Entity\Profile;
 use App\Repository\MediaObjectRepository;
 use App\Repository\UserRepository;
