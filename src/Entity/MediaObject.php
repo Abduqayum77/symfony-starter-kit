@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Media\CreateMediaBase64Action;
 use App\Repository\MediaObjectRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -34,10 +35,14 @@ class MediaObject
     private ?int $id = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'])]
-    #[Groups(['media_object:read'])]
+    #[Groups(['profile:read'])]
     public ?string $contentUrl = null;
 
-    #[Groups(['media_object:write'])]
+    #[Groups([
+        'media_object:write',
+        'profile:write',
+        'profile:roles:write'
+    ])]
     private ?string $image = null;
 
     #[Vich\UploadableField(mapping: "media_object", fileNameProperty: "filePath")]
@@ -47,6 +52,29 @@ class MediaObject
 
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups([
+        'media_object:write',
+        'media_object:read',
+        'profile:write',
+        'profile:read',
+        'profile:roles:write',
+    ])]
+    private ?string $name = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups([
+        'media_object:write',
+        'media_object:read',
+        'profile:write',
+        'profile:read',
+        'profile:roles:write',
+    ])]
+    private ?\DateTimeInterface $date = null;
+
+    #[ORM\ManyToOne(inversedBy: 'file')]
+    private ?Profile $profile = null;
 
     public function getFile(): ?File
     {
@@ -73,6 +101,42 @@ class MediaObject
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?Profile $profile): self
+    {
+        $this->profile = $profile;
 
         return $this;
     }

@@ -26,6 +26,8 @@ use App\Entity\Interfaces\DeletedAtSettableInterface;
 use App\Entity\Interfaces\UpdatedAtSettableInterface;
 use App\Repository\UserRepository;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -129,13 +131,20 @@ class User implements
     #[Groups(['users:read', 'user:write', 'user:put:write', 'user:isUniqueEmail:write'])]
     private ?string $email = null;
 
+    #[Groups(['profile:read', 'teacher:read', 'student:read', 'users:read', 'parents:read'])]
+    private ?string $username = null;
+
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user:write', 'user:changePassword:write'])]
     #[Assert\Length(min: 6, minMessage: 'Password must be at least {{ limit }} characters long')]
     private ?string $password = null;
 
     #[ORM\Column(type: 'array')]
-    #[Groups(['user:read'])]
+    #[Groups([
+        'user:write',
+        'profile:read',
+        'user:read'
+    ])]
     private array $roles = [];
 
     #[ORM\Column(type: 'datetime')]
@@ -148,6 +157,18 @@ class User implements
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $deletedAt = null;
+
+    #[ORM\OneToOne(targetEntity: Profile::class, mappedBy: 'user')]
+    #[Groups(['users:read'])]
+    private ?Profile $profile = null;
+
+    #[ORM\ManyToMany(targetEntity: Roles::class, inversedBy: 'users')]
+    private Collection $rol;
+
+    public function __construct()
+    {
+        $this->rol = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -169,7 +190,7 @@ class User implements
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
+//        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -268,6 +289,42 @@ class User implements
     public function setDeletedAt(?DateTimeInterface $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    /**
+     * @return Collection<int, Roles>
+     */
+    public function getRol(): Collection
+    {
+        return $this->rol;
+    }
+
+    public function getRole(): ?int
+    {
+        $firstRole = $this->getRol()->first();
+
+        return $firstRole ? $firstRole->getId() : null;
+    }
+
+    public function addRol(Roles $rol): self
+    {
+        if (!$this->rol->contains($rol)) {
+            $this->rol->add($rol);
+        }
+
+        return $this;
+    }
+
+    public function removeRol(Roles $rol): self
+    {
+        $this->rol->removeElement($rol);
 
         return $this;
     }
